@@ -24,6 +24,11 @@ getLocalVersion() {
     local directory="${1}"
     local version
 
+    if [[ ! -d "${directory}" ]] && [[ -r /etc/pihole/VERSION ]]; then
+        awk '{ print $1 }' < /etc/pihole/VERSION
+        return $?
+    fi
+
     cd "${directory}" 2> /dev/null || { echo "${DEFAULT}"; return 1; }
     version=$(git describe --tags --always || echo "$DEFAULT")
     if [[ "${version}" =~ ^v ]]; then
@@ -47,6 +52,11 @@ getLocalHash() {
     # Get the short hash of the local repository
     local directory="${1}"
     local hash
+
+    if [[ ! -d "${directory}" ]] && [[ -r /etc/pihole/VERSION ]]; then
+        awk '{ print $2 }' < /etc/pihole/VERSION
+        return $?
+    fi
 
     cd "${directory}" 2> /dev/null || { echo "${DEFAULT}"; return 1; }
     hash=$(git rev-parse --short HEAD || echo "$DEFAULT")
@@ -121,6 +131,10 @@ getLocalBranch(){
     if [[ "$1" == "FTL" ]]; then
         branch="$(pihole-FTL branch)"
     else
+        if [[ ! -d "${directory}" ]]; then
+            echo ""
+            return 0
+        fi
         cd "${directory}" 2> /dev/null || { echo "${DEFAULT}"; return 1; }
         branch=$(git rev-parse --abbrev-ref HEAD || echo "$DEFAULT")
     fi
