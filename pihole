@@ -58,17 +58,6 @@ arpFunc() {
   exit 0
 }
 
-updatePiholeFunc() {
-  shift
-  "${PI_HOLE_SCRIPT_DIR}"/update.sh "$@"
-  exit 0
-}
-
-reconfigurePiholeFunc() {
-  /etc/.pihole/automated\ install/basic-install.sh --reconfigure
-  exit 0;
-}
-
 updateGravityFunc() {
   "${PI_HOLE_SCRIPT_DIR}"/gravity.sh "$@"
   exit $?
@@ -86,11 +75,6 @@ chronometerFunc() {
   exit 0
 }
 
-
-uninstallFunc() {
-  "${PI_HOLE_SCRIPT_DIR}"/uninstall.sh
-  exit 0
-}
 
 versionFunc() {
   shift
@@ -312,29 +296,6 @@ tailFunc() {
   exit 0
 }
 
-piholeCheckoutFunc() {
-  if [[ "$2" == "-h" ]] || [[ "$2" == "--help" ]]; then
-    echo "Usage: pihole checkout [repo] [branch]
-Example: 'pihole checkout master' or 'pihole checkout core dev'
-Switch Pi-hole subsystems to a different GitHub branch
-
-Repositories:
-  core [branch]       Change the branch of Pi-hole's core subsystem
-  web [branch]        Change the branch of Web Interface subsystem
-  ftl [branch]        Change the branch of Pi-hole's FTL subsystem
-
-Branches:
-  master              Update subsystems to the latest stable release
-  dev                 Update subsystems to the latest development release
-  branchname          Update subsystems to the specified branchname"
-    exit 0
-  fi
-
-  source "${PI_HOLE_SCRIPT_DIR}"/piholeCheckout.sh
-  shift
-  checkout "$@"
-}
-
 tricorderFunc() {
   if [[ ! -p "/dev/stdin" ]]; then
     echo -e "  ${INFO} Please do not call Tricorder directly"
@@ -366,11 +327,6 @@ tricorderFunc() {
   fi
 }
 
-updateCheckFunc() {
-  "${PI_HOLE_SCRIPT_DIR}"/updatecheck.sh "$@"
-  exit 0
-}
-
 helpFunc() {
   echo "Usage: pihole [options]
 Example: 'pihole -w -h'
@@ -389,7 +345,6 @@ Debugging Options:
   -d, debug           Start a debugging session
                         Add '-a' to enable automated debugging
   -f, flush           Flush the Pi-hole log
-  -r, reconfigure     Reconfigure or Repair Pi-hole subsystems
   -t, tail            View the live output of the Pi-hole log
 
 Options:
@@ -403,11 +358,8 @@ Options:
                         Add '-h' for more info on logging usage
   -q, query           Query the adlists for a specified domain
                         Add '-h' for more info on query usage
-  -up, updatePihole   Update Pi-hole subsystems
-                        Add '--check-only' to exit script before update is performed.
   -v, version         Show installed versions of Pi-hole, Web Interface & FTL
                         Add '-h' for more info on version usage
-  uninstall           Uninstall Pi-hole from your system
   status              Display the running status of Pi-hole subsystems
   enable              Enable Pi-hole subsystems
   disable             Disable Pi-hole subsystems
@@ -415,8 +367,6 @@ Options:
   restartdns          Full restart Pi-hole subsystems
                         Add 'reload' to update the lists and flush the cache without restarting the DNS server
                         Add 'reload-lists' to only update the lists WITHOUT flushing the cache or restarting the DNS server
-  checkout            Switch Pi-hole subsystems to a different GitHub branch
-                        Add '-h' for more info on checkout usage
   arpflush            Flush information stored in Pi-hole's network tables";
   exit 0
 }
@@ -450,24 +400,19 @@ case "${1}" in
   "--white-wild" | "white-wild"   ) listFunc "$@";;
   "-d" | "debug"                ) debugFunc "$@";;
   "-f" | "flush"                ) flushFunc "$@";;
-  "-up" | "updatePihole"        ) updatePiholeFunc "$@";;
-  "-r"  | "reconfigure"         ) reconfigurePiholeFunc;;
   "-g" | "updateGravity"        ) updateGravityFunc "$@";;
   "-c" | "chronometer"          ) chronometerFunc "$@";;
   "-h" | "help"                 ) helpFunc;;
   "-v" | "version"              ) versionFunc "$@";;
   "-q" | "query"                ) queryFunc "$@";;
   "-l" | "logging"              ) piholeLogging "$@";;
-  "uninstall"                   ) uninstallFunc;;
   "enable"                      ) piholeEnable 1;;
   "disable"                     ) piholeEnable 0 "$2";;
   "status"                      ) statusFunc "$2";;
   "restartdns"                  ) restartDNS "$2";;
   "-a" | "admin"                ) webpageFunc "$@";;
   "-t" | "tail"                 ) tailFunc;;
-  "checkout"                    ) piholeCheckoutFunc "$@";;
   "tricorder"                   ) tricorderFunc;;
-  "updatechecker"               ) updateCheckFunc "$@";;
   "arpflush"                    ) arpFunc "$@";;
   *                             ) helpFunc;;
 esac
