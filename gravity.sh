@@ -18,10 +18,10 @@ source "${coltable}"
 regexconverter="/opt/pihole/wildcard_regex_converter.sh"
 source "${regexconverter}"
 # shellcheck disable=SC1091
-source "/etc/.pihole/advanced/Scripts/database_migration/gravity-db.sh"
+source "/opt/pihole/database_migration/gravity-db.sh"
 
 basename="pihole"
-PIHOLE_COMMAND="/usr/local/bin/${basename}"
+PIHOLE_COMMAND="/usr/bin/${basename}"
 
 piholeDir="/etc/${basename}"
 
@@ -34,11 +34,11 @@ adListFile="${piholeDir}/adlists.list"
 localList="${piholeDir}/local.list"
 VPNList="/etc/openvpn/ipp.txt"
 
-piholeGitDir="/etc/.pihole"
+piholeSqlDir="/opt/pihole/database_migration"
 gravityDBfile="${piholeDir}/gravity.db"
 gravityTEMPfile="${piholeDir}/gravity_temp.db"
-gravityDBschema="${piholeGitDir}/advanced/Templates/gravity.db.sql"
-gravityDBcopy="${piholeGitDir}/advanced/Templates/gravity_copy.sql"
+gravityDBschema="${piholeSqlDir}/gravity.db.sql"
+gravityDBcopy="${piholeSqlDir}/gravity_copy.sql"
 optimize_database=false
 
 domainsExtension="domains"
