@@ -17,7 +17,7 @@
 # This ensures that pihole ends up in the correct state after a sequence of
 # commands suchs as: `pihole disable 30s; pihole enable; pihole disable`
 
-readonly PI_HOLE_BIN_DIR="/usr/local/bin"
+readonly PI_HOLE_BIN_DIR="/usr/bin"
 
 sleep "${1}"
 "${PI_HOLE_BIN_DIR}"/pihole enable

@@ -15,7 +15,7 @@ readonly PI_HOLE_SCRIPT_DIR="/opt/pihole"
 # they might get set again when the installer is sourced. This causes an
 # error due to modifying a readonly variable.
 setupVars="/etc/pihole/setupVars.conf"
-PI_HOLE_BIN_DIR="/usr/local/bin"
+PI_HOLE_BIN_DIR="/usr/bin"
 
 readonly colfile="${PI_HOLE_SCRIPT_DIR}/COL_TABLE"
 source "${colfile}"
